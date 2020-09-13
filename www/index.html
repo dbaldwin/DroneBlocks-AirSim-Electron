@@ -25,9 +25,21 @@
             <block type="text_print"></block>
         </xml>
 
+        <div>
+            <button onclick="doSomething();">Launch</button>
+        </div>
+
         <script>
-            var workspace = Blockly.inject('blocklyDiv',
-                {toolbox: document.getElementById('toolbox')});
+            var workspace = Blockly.inject('blocklyDiv', {toolbox: document.getElementById('toolbox')})
         </script>
+
+        <script>
+            const { ipcRenderer } = require('electron')
+
+            function doSomething() {
+                ipcRenderer.send('launch', 'takeoff')
+            }
+        </script>
+
     </body>
 </html>
