@@ -69,14 +69,14 @@ client.connect(41451, '127.0.0.1', function() {});
 client.on('data', function(data) {
 	console.log('Received: ' + msgpack.decode(data));
 
-    commandIndex = commandIndex + 1;
+    /*commandIndex = commandIndex + 1;
 
     // Send next command
     if (commandIndex < commandCount) {
         send(commands[commandIndex]);
     } else {
         console.log("Mission complete!");
-    }
+    }*/
 	//client.destroy(); // kill client after server's response
 });
 
@@ -91,7 +91,28 @@ function send(command) {
 
 
 ipcMain.on('launch', (event, arg) => {
-  console.log(arg) // prints "ping"
+  
 
-  send(commands[commandIndex]);
+  send(enableApiControl);
+  send(armDisarm);
+
+  if (arg.indexOf("takeoff") > -1) {
+    console.log("taking off")
+    send(takeoff)
+  } else if (arg.indexOf("land") > -1) {
+    console.log("land")
+    send(land)
+  } else if (arg.indexOf("fly_to") > -1) {
+    let params = arg.split(",")
+
+    let x = params[1]
+    let y = params[2]
+    let z = params[3]
+
+    let fly = [0, 3, "moveToPosition", [x, y, z, 5, 60, 0, {"is_rate": true, "yaw_or_rate": 0}, -1, 1, ""]]
+    
+    send(fly)
+  }
+
+
 });
