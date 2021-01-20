@@ -2,7 +2,7 @@
   "name": "droneblocks-airsim-electron",
   "version": "1.0.0",
   "description": "DroneBlocks with AirSim",
-  "main": "main.js",
+  "main": "src/main.js",
   "private": true,
   "scripts": {
     "start": "electron .",
