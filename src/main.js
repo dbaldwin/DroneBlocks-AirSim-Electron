@@ -1,4 +1,8 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
+var net = require('net');
+var msgpack = require("msgpack-lite");
+
+let client = new net.Socket();
 
 function createWindow () {
   // Create the browser window.
@@ -14,7 +18,10 @@ function createWindow () {
   win.loadURL('https://airsim-dev.web.app/airsim.html');
 
   // Open the DevTools.
-  win.webContents.openDevTools()
+  //win.webContents.openDevTools()
+
+  // Connect to AirSim TODO: Make this a button at some point
+  client.connect(41451, '127.0.0.1', function() {});
 }
 
 // This method will be called when Electron has finished
@@ -43,6 +50,15 @@ app.on('activate', () => {
 ipcMain.on('launch', (event, arg) => {
 
   console.log("launch called");
+
+  var enableApiControl  = [0, 0, "enableApiControl", [true, ""]];
+  client.write(msgpack.encode(enableApiControl));
+  
+  let takeoff  = [0, 2, "takeoff", [10, ""]];
+  client.write(msgpack.encode(takeoff));
+
+  
+
 
   // send(enableApiControl);
   // send(armDisarm);
