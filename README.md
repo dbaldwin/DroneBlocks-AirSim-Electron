@@ -1,0 +1,4 @@
+- npm install
+- npm start (for dev)
+- npm run make (for packaging)
+- Note: npm install may not do the trick so you may need to issue the following: **npx @electron-forge/cli@latest import**
