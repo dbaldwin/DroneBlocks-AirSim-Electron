@@ -5,12 +5,14 @@
   "main": "src/main.js",
   "private": true,
   "scripts": {
-    "start": "electron .",
+    "start": "electron-forge start",
     "pack": "electron-builder --dir",
     "dist": "electron-builder --project ./src",
     "postinstall": "electron-builder install-app-deps",
     "publish": "electron-builder -p always",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "build": {
     "appId": "DroneBlocks",
@@ -21,12 +23,44 @@
   "author": "Dennis Baldwin",
   "license": "ISC",
   "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.54",
+    "@electron-forge/maker-deb": "^6.0.0-beta.54",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.54",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
+    "@electron-forge/maker-zip": "^6.0.0-beta.54",
     "electron": "^10.1.1",
-    "electron-builder": "^22.8.0",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
+    "electron-squirrel-startup": "^1.0.0",
     "msgpack-lite": "^0.1.26"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "droneblocks_airsim_electron"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
   }
 }
