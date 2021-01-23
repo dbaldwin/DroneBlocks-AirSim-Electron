@@ -1,12 +1,17 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
-var net = require('net');
-var msgpack = require("msgpack-lite");
+const { app, BrowserWindow, Menu } = require('electron')
+const { TCPCommandHandler } = require('./TCPCommandHandler')
 
-let client = new net.Socket();
+// Handles connection between web view and main app
+const ipcMain = require('electron').ipcMain
+
+
+//let client = new net.Socket();
+
+let mainWindow;
 
 function createWindow () {
   // Create the browser window.
-  const win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
@@ -15,13 +20,13 @@ function createWindow () {
   })
 
   // and load the index.html of the app.
-  win.loadURL('https://airsim-dev.web.app/airsim.html');
+  mainWindow.loadURL('https://airsim-dev.web.app/airsim.html');
 
   // Open the DevTools.
-  //win.webContents.openDevTools()
+  //mainWindow.webContents.openDevTools()
 
   // Connect to AirSim TODO: Make this a button at some point
-  client.connect(41451, '127.0.0.1', function() {});
+  //client.connect(41451, '127.0.0.1', function() {});
 }
 
 // This method will be called when Electron has finished
@@ -51,11 +56,13 @@ ipcMain.on('launch', (event, arg) => {
 
   console.log("launch called");
 
-  var enableApiControl  = [0, 0, "enableApiControl", [true, ""]];
-  client.write(msgpack.encode(enableApiControl));
+  const commandHandler = new TCPCommandHandler('127.0.0.1', 41451, mainWindow);
   
-  let takeoff  = [0, 2, "takeoff", [10, ""]];
-  client.write(msgpack.encode(takeoff));
+  // var enableApiControl  = [0, 0, "enableApiControl", [true, ""]];
+  // client.write(msgpack.encode(enableApiControl));
+  
+  // let takeoff  = [0, 2, "takeoff", [10, ""]];
+  // client.write(msgpack.encode(takeoff));
 
   
 

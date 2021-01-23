@@ -9,15 +9,16 @@
 // import { Hover } from './commands/Hover'
 // import { Land } from  './commands/Land'
 
-import { TakeOff } from './commands/TakeOff'
+const { TakeOff } = require('./commands/TakeOff')
+const net = require('net')
 
-export class TCPCommandHandler {
+class TCPCommandHandler {
 
-    constructor(host, port, drone, mainWindow) {
+    constructor(host, port, /*drone,*/ mainWindow) {
         this.client = new net.Socket();
         this.host = host;
         this.port = port;
-        this.drone = drone;
+        //this.drone = drone;
         this.mainWindow = mainWindow;
         this.commandArray = [];
         this.commandIndex = 0;
@@ -47,9 +48,10 @@ export class TCPCommandHandler {
         //     land: Land
         // };
 
+        console.log("Constructor called")
         
-        var msgpack = require("msgpack-lite");
-        var net = require('net');
+        //var msgpack = require("msgpack-lite");
+        //var net = require('net');
 
         var enableApiControl  = [0, 0, "enableApiControl", [true, ""]];
         var armDisarm  = [0, 1, "armDisarm", [false, ""]];
@@ -59,10 +61,12 @@ export class TCPCommandHandler {
 
         
         // Connect to AirSim
-        //client.connect(41451, '127.0.0.1', function() {});
+        this.client.connect(this.port, this.host, function() {
+
+        });
 
         // Listen for response
-        client.on('data', function(data) {
+        this.client.on('data', function(data) {
             console.log('Received: ' + msgpack.decode(data));
 
             /*commandIndex = commandIndex + 1;
@@ -76,7 +80,7 @@ export class TCPCommandHandler {
             //client.destroy(); // kill client after server's response
         });
 
-        client.on('close', function() {
+        this.client.on('close', function() {
             console.log('Connection closed');
         });
 
@@ -219,3 +223,5 @@ export class TCPCommandHandler {
     }
 
 }
+
+module.exports.TCPCommandHandler = TCPCommandHandler
