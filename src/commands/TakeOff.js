@@ -1,12 +1,12 @@
 class TakeOff {
 
     constructor() {
-        console.log("Takeoff constructor called")
-        this.takeoff = [0, 2, "takeoff", [10, ""]];
+        // 5 in the array represents the number of seconds we allow for takeoff
+        this.command = [0, 0, "takeoff", [5, ""]]
     }
 
-    command() {
-        return this.takeoff
+    getCommand() {
+        return this.command
     }
 }
 module.exports.TakeOff = TakeOff
