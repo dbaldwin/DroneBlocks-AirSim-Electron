@@ -11,20 +11,25 @@
 
 const { TakeOff } = require('./commands/TakeOff')
 const net = require('net')
+const msgpack = require('msgpack-lite')
 
 class TCPCommandHandler {
 
     constructor(host, port, /*drone,*/ mainWindow) {
-        this.client = new net.Socket();
-        this.host = host;
-        this.port = port;
+        this.client = new net.Socket()
+        this.host = host
+        this.port = port
         //this.drone = drone;
-        this.mainWindow = mainWindow;
-        this.commandArray = [];
-        this.commandIndex = 0;
-        this.interval = 0;
-        this.commandDelay = 1000;
-        this.isMissionAborted = false;
+        this.mainWindow = mainWindow
+        this.commandArray = []
+        this.commandIndex = 0
+        this.interval = 0
+        this.commandDelay = 1000
+        this.isMissionAborted = false
+
+        this.commandClasses = {
+            takeOff: TakeOff
+        }
 
         // this.commandClasses = {
         //     showMessage: ShowMessage,
@@ -55,19 +60,18 @@ class TCPCommandHandler {
 
         var enableApiControl  = [0, 0, "enableApiControl", [true, ""]];
         var armDisarm  = [0, 1, "armDisarm", [false, ""]];
-        var takeoff  = [0, 2, "takeoff", [10, ""]];
         var flyForward = [0, 3, "moveToPosition", [0, -5, -25, 5, 60, 0, {"is_rate": true, "yaw_or_rate": 0}, -1, 1, ""]]
-        var land = [0, 4, "land", [60, ""]];
+        var land = [0, 4, "land", [60, ""]]
 
         
         // Connect to AirSim
         this.client.connect(this.port, this.host, function() {
-
-        });
+            //console.log(this.commandDelay)
+        })
 
         // Listen for response
         this.client.on('data', function(data) {
-            console.log('Received: ' + msgpack.decode(data));
+            console.log('Received: ' + msgpack.decode(data))
 
             /*commandIndex = commandIndex + 1;
 
@@ -78,16 +82,16 @@ class TCPCommandHandler {
                 console.log("Mission complete!");
             }*/
             //client.destroy(); // kill client after server's response
-        });
+        })
 
         this.client.on('close', function() {
-            console.log('Connection closed');
-        });
+            console.log('Connection closed')
+        })
 
-        function send(command) {
-            console.log("sending command: " + command);
-            client.write(msgpack.encode(command));
-        }
+    }
+
+    send() {
+        this.client.write(msgpack.encode(new TakeOff().command()))
     }
 
     init() {        

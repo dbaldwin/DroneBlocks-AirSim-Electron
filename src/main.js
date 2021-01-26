@@ -54,9 +54,10 @@ app.on('activate', () => {
 
 ipcMain.on('launch', (event, arg) => {
 
-  console.log("launch called");
+  console.log("launch called")
 
-  const commandHandler = new TCPCommandHandler('127.0.0.1', 41451, mainWindow);
+  const commandHandler = new TCPCommandHandler('127.0.0.1', 41451, mainWindow)
+  commandHandler.send()
   
   // var enableApiControl  = [0, 0, "enableApiControl", [true, ""]];
   // client.write(msgpack.encode(enableApiControl));
