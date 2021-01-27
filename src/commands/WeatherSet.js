@@ -4,7 +4,7 @@ class WeatherSet {
         intensity: range from 0 - 1
     */
     constructor(weatherType, intensity) {
-        this.command = [0, 0, "simSetWeatherParameter", [weatherType, intensity]]
+        this.command = [0, 0, "simSetWeatherParameter", [parseInt(weatherType), parseFloat(intensity)]]
     }
 
     getCommand() {

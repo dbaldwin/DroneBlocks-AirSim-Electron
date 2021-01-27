@@ -5,6 +5,8 @@ const { Hover } = require('./commands/Hover')
 const { Land } = require('./commands/Land')
 const { MoveToPosition } = require('./commands/MoveToPosition')
 const { MoveByVelocity } = require('./commands/MoveByVelocity')
+const { WeatherEnable } = require('./commands/WeatherEnable')
+const { WeatherSet } = require('./commands/WeatherSet')
 
 class MissionBuilder {
 
@@ -77,6 +79,17 @@ class MissionBuilder {
 
                 // Todo we need to expose velocity in the blocks
                 commandList.push(new MoveToPosition(northx, easty, downz, 5).getCommand())
+
+            } else if (command.indexOf("weather_enable") > -1) {
+
+                let enable = command.split(",")[1] == "true"
+                commandList.push(new WeatherEnable(enable).getCommand())
+
+            } else if (command.indexOf("weather_set") > -1) {
+
+                let weather_type = command.split(",")[1]
+                let weather_intensity = command.split(",")[2]
+                commandList.push(new WeatherSet(weather_type, weather_intensity).getCommand())
 
             } else if (command.indexOf("land") > -1) {
                 commandList.push(new Land().getCommand())
