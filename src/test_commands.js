@@ -11,22 +11,25 @@ const { Land } = require('./commands/Land')
 const { ArmDisarm } = require('./commands/ArmDisarm')
 const { WeatherEnable } = require('./commands/WeatherEnable')
 const { WeatherSet } = require('./commands/WeatherSet')
+const { MoveByVelocity } = require('./commands/MoveByVelocity')
 
 let enableApiControl = new EnableApiControl().getCommand()
 let takeoff = new TakeOff().getCommand()
 let land = new Land().getCommand()
+let flyBy = new MoveByVelocity(0, 0, -5, 10).getCommand()
 let flyTo = new MoveToPosition(20, 0, 0, 5).getCommand()
 let disarm = new ArmDisarm(false).getCommand()
 let enableWeather = new WeatherEnable(true).getCommand()
 let weatherSet = new WeatherSet(2, 0.5).getCommand() // 50% snow
 
+// Create the TCP client
 let client = new net.Socket()
 
 // Index of the current command being executed
 let commandIndex = 0
 
 // Stores array of commands to be executed
-let commandArray = [enableApiControl, enableWeather, weatherSet, takeoff, flyTo, land, disarm]
+let commandArray = [enableApiControl, enableWeather, weatherSet, takeoff, flyBy, flyTo, land, disarm]
 
 // Delay between commands
 const commandDelay = 1000

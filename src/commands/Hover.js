@@ -1,6 +1,7 @@
 class Hover {
-    constructor() {
-        this.command = "hover"
+    constructor(delay) {
+        console.log("Hover delay is: " + delay)
+        this.command = ["hover", delay]
     }
 
     getCommand() {

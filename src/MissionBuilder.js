@@ -3,6 +3,8 @@ const { ArmDisarm } = require('./commands/ArmDisarm')
 const { TakeOff } = require('./commands/TakeOff')
 const { Hover } = require('./commands/Hover')
 const { Land } = require('./commands/Land')
+const { MoveToPosition } = require('./commands/MoveToPosition')
+const { MoveByVelocity } = require('./commands/MoveByVelocity')
 
 class MissionBuilder {
 
@@ -33,13 +35,49 @@ class MissionBuilder {
             const command = this.missionArray[i]
             
             if (command.indexOf("disarm") > -1) {
+
                 commandList.push(new ArmDisarm(false).getCommand())
+
             } else if (command.indexOf("arm") > -1) {
+
                 commandList.push(new ArmDisarm(true).getCommand())
+
             } else if (command.indexOf("takeoff") > -1) {
+
                 commandList.push(new TakeOff().getCommand())
+
             } else if (command.indexOf("hover") > -1) {
-                commandList.push(new Hover().getCommand())
+
+                let delay = command.split(",")[1]
+                commandList.push(new Hover(delay).getCommand())
+
+            } else if (command.indexOf("fly_x") > -1) {
+
+                let vx = command.split(",")[1]
+                let duration = command.split(",")[2]
+                commandList.push(new MoveByVelocity(vx, 0, 0, duration).getCommand())
+
+            } else if (command.indexOf("fly_y") > -1) {
+
+                let vy = command.split(",")[1]
+                let duration = command.split(",")[2]
+                commandList.push(new MoveByVelocity(0, vy, 0, duration).getCommand())
+
+            } else if (command.indexOf("fly_z") > -1) {
+
+                let vz = command.split(",")[1]
+                let duration = command.split(",")[2]
+                commandList.push(new MoveByVelocity(0, 0, vz, duration).getCommand())
+
+            } else if (command.indexOf("fly_to_location") > -1) {
+
+                let northx = command.split(",")[1]
+                let easty = command.split(",")[2]
+                let downz = command.split(",")[3]
+
+                // Todo we need to expose velocity in the blocks
+                commandList.push(new MoveToPosition(northx, easty, downz, 5).getCommand())
+
             } else if (command.indexOf("land") > -1) {
                 commandList.push(new Land().getCommand())
             }
