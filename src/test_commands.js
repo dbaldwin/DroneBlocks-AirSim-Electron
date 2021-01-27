@@ -39,6 +39,7 @@ client.connect(41451, '127.0.0.1', function() {
 
 })
 
+// When we get a response from AirSim let's process the next command
 client.on('data', function(data) {
 
     console.log('Got response from AirSim: ' + msgpack.decode(data))

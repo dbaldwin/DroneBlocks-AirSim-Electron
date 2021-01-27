@@ -1,4 +1,5 @@
 const { app, BrowserWindow, Menu } = require('electron')
+const { MissionBuilder } = require ('./MissionBuilder')
 const { TCPCommandHandler } = require('./TCPCommandHandler')
 
 // Handles connection between web view and main app
@@ -54,10 +55,16 @@ app.on('activate', () => {
 
 ipcMain.on('launch', (event, arg) => {
 
-  console.log("launch called")
+  console.log(arg)
 
-  const commandHandler = new TCPCommandHandler('127.0.0.1', 41451, mainWindow)
-  commandHandler.send()
+  let mb = new MissionBuilder(arg)
+  let commandArray = mb.parseMission()
+
+  let t = new TCPCommandHandler('127.0.0.1', 41451, commandArray)
+  t.startMissionLoop()
+
+  //const commandHandler = new TCPCommandHandler('127.0.0.1', 41451, mainWindow)
+  //commandHandler.send()
   
   // var enableApiControl  = [0, 0, "enableApiControl", [true, ""]];
   // client.write(msgpack.encode(enableApiControl));
