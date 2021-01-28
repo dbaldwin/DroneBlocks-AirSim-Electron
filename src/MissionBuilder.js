@@ -8,6 +8,7 @@ const { MoveByVelocity } = require('./commands/MoveByVelocity')
 const { RotateToYaw } = require('./commands/RotateToYaw')
 const { WeatherEnable } = require('./commands/WeatherEnable')
 const { WeatherSet } = require('./commands/WeatherSet')
+const { RotateByYawRate } = require('./commands/RotateByYawRate')
 
 class MissionBuilder {
 
@@ -88,6 +89,9 @@ class MissionBuilder {
 
             } else if (command.indexOf("rotate_yaw_rate") > -1) {
 
+                let rate = command.split(",")[1]
+                let duration = command.split(",")[2]
+                commandList.push(new RotateByYawRate(rate, duration).getCommand())
             
             } else if (command.indexOf("weather_enable") > -1) {
 
