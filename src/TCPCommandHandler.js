@@ -1,6 +1,5 @@
 const net = require('net')
 const msgpack = require('msgpack-lite')
-const { checkServerIdentity } = require('tls')
 
 class TCPCommandHandler {
 
