@@ -1,6 +1,7 @@
 const { app, BrowserWindow, Menu } = require('electron')
 const { MissionBuilder } = require ('./MissionBuilder')
 const { TCPCommandHandler } = require('./TCPCommandHandler')
+const { GPSHandler } = require('./GPSHandler')
 
 // Handles connection between web view and main app
 const ipcMain = require('electron').ipcMain
@@ -21,13 +22,15 @@ function createWindow () {
   })
 
   // and load the index.html of the app.
-  mainWindow.loadURL('https://airsim-dev.web.app/airsim.html');
+  mainWindow.loadURL('https://airsim-dev.web.app/airsim.html?1');
 
   // Open the DevTools.
-  //mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   // Connect to AirSim TODO: Make this a button at some point
   //client.connect(41451, '127.0.0.1', function() {});
+
+  new GPSHandler(mainWindow).start()
 }
 
 // This method will be called when Electron has finished
@@ -63,38 +66,4 @@ ipcMain.on('launch', (event, arg) => {
   let t = new TCPCommandHandler('127.0.0.1', 41451, commandArray)
   t.startMissionLoop()
 
-  //const commandHandler = new TCPCommandHandler('127.0.0.1', 41451, mainWindow)
-  //commandHandler.send()
-  
-  // var enableApiControl  = [0, 0, "enableApiControl", [true, ""]];
-  // client.write(msgpack.encode(enableApiControl));
-  
-  // let takeoff  = [0, 2, "takeoff", [10, ""]];
-  // client.write(msgpack.encode(takeoff));
-
-  
-
-
-  // send(enableApiControl);
-  // send(armDisarm);
-
-  // if (arg.indexOf("takeoff") > -1) {
-  //   console.log("taking off")
-  //   send(takeoff)
-  // } else if (arg.indexOf("land") > -1) {
-  //   console.log("land")
-  //   send(land)
-  // } else if (arg.indexOf("fly_to") > -1) {
-  //   let params = arg.split(",")
-
-  //   let x = params[1]
-  //   let y = params[2]
-  //   let z = params[3]
-
-  //   let fly = [0, 3, "moveToPosition", [x, y, z, 5, 60, 0, {"is_rate": true, "yaw_or_rate": 0}, -1, 1, ""]]
-    
-  //   send(fly)
-  // }
-
-
-});
+})
