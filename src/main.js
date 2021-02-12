@@ -9,7 +9,7 @@ const path = require('path')
 const ipcMain = require('electron').ipcMain
 
 // Where we'll store photos
-const photoFolder = path.join(app.getAppPath(), 'photos')
+const photoFolder = path.join(app.getPath('pictures'), 'DroneBlocks')
 
 let mainWindow;
 
@@ -27,7 +27,7 @@ function createWindow () {
   mainWindow.loadURL('https://airsim-dev.web.app/airsim.html?1');
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  //mainWindow.webContents.openDevTools()
 
   // Get positin position
   new GPSHandler(mainWindow).start()
