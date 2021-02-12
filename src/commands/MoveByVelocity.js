@@ -1,5 +1,3 @@
-const { MoveToPosition } = require("./MoveToPosition");
-
 class MoveByVelocity {
 
     constructor(vx, vy, vz, duration) {
