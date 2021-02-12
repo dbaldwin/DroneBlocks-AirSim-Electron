@@ -6,6 +6,7 @@ const { Land } = require('./commands/Land')
 const { MoveToPosition } = require('./commands/MoveToPosition')
 const { MoveByVelocity } = require('./commands/MoveByVelocity')
 const { RotateToYaw } = require('./commands/RotateToYaw')
+const { GetImages } = require('./commands/GetImages')
 const { WeatherEnable } = require('./commands/WeatherEnable')
 const { WeatherSet } = require('./commands/WeatherSet')
 const { RotateByYawRate } = require('./commands/RotateByYawRate')
@@ -92,6 +93,10 @@ class MissionBuilder {
                 let rate = command.split(",")[1]
                 let duration = command.split(",")[2]
                 commandList.push(new RotateByYawRate(rate, duration).getCommand())
+            
+            } else if (command.indexOf("photo") > -1) {
+
+                commandList.push(new GetImages().getCommand())
             
             } else if (command.indexOf("weather_enable") > -1) {
 

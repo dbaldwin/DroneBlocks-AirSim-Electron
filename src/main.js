@@ -2,12 +2,14 @@ const { app, BrowserWindow, Menu } = require('electron')
 const { MissionBuilder } = require ('./MissionBuilder')
 const { TCPCommandHandler } = require('./TCPCommandHandler')
 const { GPSHandler } = require('./GPSHandler')
+const fs = require('fs')
+const path = require('path')
 
 // Handles connection between web view and main app
 const ipcMain = require('electron').ipcMain
 
-
-//let client = new net.Socket();
+// Where we'll store photos
+const photoFolder = path.join(app.getAppPath(), 'photos')
 
 let mainWindow;
 
@@ -27,10 +29,15 @@ function createWindow () {
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
 
-  // Connect to AirSim TODO: Make this a button at some point
-  //client.connect(41451, '127.0.0.1', function() {});
-
+  // Get positin position
   new GPSHandler(mainWindow).start()
+
+  // Check if the DroneBlocks photo folder exists, it not create it
+  if (!fs.existsSync(photoFolder)) {
+    fs.mkdir(photoFolder, {recursive: true}, (err) => {
+      if (err) console.log(err)
+    })
+  }
 }
 
 // This method will be called when Electron has finished
@@ -63,7 +70,8 @@ ipcMain.on('launch', (event, arg) => {
   let mb = new MissionBuilder(arg)
   let commandArray = mb.parseMission()
 
-  let t = new TCPCommandHandler('127.0.0.1', 41451, commandArray)
+  let t = new TCPCommandHandler('127.0.0.1', 41451, commandArray, photoFolder)
   t.startMissionLoop()
 
 })
+

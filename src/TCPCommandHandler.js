@@ -1,12 +1,15 @@
 const net = require('net')
 const msgpack = require('msgpack-lite')
+const fs = require('fs')
+const path = require('path')
 
 class TCPCommandHandler {
 
-    constructor(host, port, commandArray) {
+    constructor(host, port, commandArray, photoFolder) {
         this.host = host
         this.port = port
         this.commandArray = commandArray
+        this.photoFolder = photoFolder
         this.client = new net.Socket()
         this.commandIndex = 0
         const commandDelay = 1000
@@ -17,7 +20,29 @@ class TCPCommandHandler {
         // Listen for data
         this.client.on('data', function(data) {
             
-            console.log('Got response from AirSim: ' + msgpack.decode(data))
+            const response = msgpack.decode(data)
+
+            console.log('Got response from AirSim: ' + response)
+
+            // For photo responses we want to convert the byte array to a photo and store it
+            if (response.length == 4 && response[3]) {
+
+                // This is currently how we detect if there's a photo
+                // TODO: find a better way
+                if (typeof response[3][0] == 'object') {
+
+                    const imageData = response[3][0].image_data_uint8
+
+                    const arrayBuffer = new Uint8Array(imageData)
+
+                    fs.writeFile(path.join(self.photoFolder, Date.now() + '.jpg'), arrayBuffer, (err) => {
+                        if(err) {
+                            console.log('error saving photo')
+                        }
+                    })
+                }
+
+            }
 
             // Send the next command if there are more
             self.processNextCommand()
