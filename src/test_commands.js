@@ -1,10 +1,9 @@
 /*
     A basic file to test a simple mission in AirSim
 */
-
 const net = require('net')
 const util = require('util')
-const msgpack = require('msgpack-lite')
+const notepack = require('notepack.io')
 const fs = require('fs')
 
 const { TakeOff } = require('./commands/TakeOff')
@@ -36,7 +35,7 @@ let commandIndex = 0
 // Stores array of commands to be executed
 //let commandArray = [enableApiControl, enableWeather, weatherSet, takeoff, flyBy, flyTo, land, disarm]
 
-let commandArray = [enableApiControl, getImage]
+let commandArray = [enableApiControl, takeoff, getImage]
 
 // Delay between commands
 const commandDelay = 1000
@@ -52,7 +51,7 @@ client.connect(41451, '127.0.0.1', function() {
 // When we get a response from AirSim let's process the next command
 client.on('data', function(data) {
 
-    let response = msgpack.decode(data)
+    let response = notepack.decode(data)
     console.log('Got response from AirSim: ' + response)
 
     
@@ -78,7 +77,7 @@ client.on('data', function(data) {
 
 
 function sendCommand(command) {
-    client.write(msgpack.encode(command))
+    client.write(notepack.encode(command))
 }
 
 function processNextCommand() {

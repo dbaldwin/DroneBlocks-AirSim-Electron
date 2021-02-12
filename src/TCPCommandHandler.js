@@ -1,5 +1,5 @@
 const net = require('net')
-const msgpack = require('msgpack-lite')
+const notepack = require('notepack.io')
 const fs = require('fs')
 const path = require('path')
 
@@ -20,7 +20,7 @@ class TCPCommandHandler {
         // Listen for data
         this.client.on('data', function(data) {
             
-            const response = msgpack.decode(data)
+            const response = notepack.decode(data)
 
             console.log('Got response from AirSim: ' + response)
 
@@ -71,7 +71,7 @@ class TCPCommandHandler {
         console.log('Sending command: ' + command)
 
         // Pack and send the command
-        this.client.write(msgpack.encode(command))
+        this.client.write(notepack.encode(command))
     }
 
     // Send the next command in the array

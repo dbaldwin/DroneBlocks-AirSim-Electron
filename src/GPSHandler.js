@@ -1,5 +1,5 @@
 const net = require('net')
-const msgpack = require('msgpack-lite')
+const notepack = require('notepack.io')
 const ipcMain = require('electron').ipcMain
 
 class GPSHandler {
@@ -22,7 +22,7 @@ class GPSHandler {
         const self = this
 
         this.client.on("data", function(data) {
-            const state = msgpack.decode(data)
+            const state = notepack.decode(data)
             
             //console.log(state)
             //console.log(state[3].collision)
@@ -51,7 +51,7 @@ class GPSHandler {
     }
 
     start() {
-        this.client.write(msgpack.encode(this.command))
+        this.client.write(notepack.encode(this.command))
         this.mainWindow.webContents.send("updatePosition", {worldPosition: this.worldPosition, gpsPosition: this.gpsPosition})
     }
 
