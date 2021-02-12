@@ -3,7 +3,10 @@
 */
 
 const net = require('net')
+const util = require('util')
 const msgpack = require('msgpack-lite')
+const fs = require('fs')
+
 const { TakeOff } = require('./commands/TakeOff')
 const { EnableApiControl } = require('./commands/EnableApiControl')
 const { MoveToPosition } = require('./commands/MoveToPosition')
@@ -12,6 +15,7 @@ const { ArmDisarm } = require('./commands/ArmDisarm')
 const { WeatherEnable } = require('./commands/WeatherEnable')
 const { WeatherSet } = require('./commands/WeatherSet')
 const { MoveByVelocity } = require('./commands/MoveByVelocity')
+const { GetImages } = require('./commands/GetImages')
 
 let enableApiControl = new EnableApiControl().getCommand()
 let takeoff = new TakeOff().getCommand()
@@ -21,6 +25,7 @@ let flyTo = new MoveToPosition(20, 0, 0, 5).getCommand()
 let disarm = new ArmDisarm(false).getCommand()
 let enableWeather = new WeatherEnable(true).getCommand()
 let weatherSet = new WeatherSet(2, 0.5).getCommand() // 50% snow
+let getImage = new GetImages().getCommand()
 
 // Create the TCP client
 let client = new net.Socket()
@@ -29,7 +34,9 @@ let client = new net.Socket()
 let commandIndex = 0
 
 // Stores array of commands to be executed
-let commandArray = [enableApiControl, enableWeather, weatherSet, takeoff, flyBy, flyTo, land, disarm]
+//let commandArray = [enableApiControl, enableWeather, weatherSet, takeoff, flyBy, flyTo, land, disarm]
+
+let commandArray = [enableApiControl, getImage]
 
 // Delay between commands
 const commandDelay = 1000
@@ -45,7 +52,24 @@ client.connect(41451, '127.0.0.1', function() {
 // When we get a response from AirSim let's process the next command
 client.on('data', function(data) {
 
-    console.log('Got response from AirSim: ' + msgpack.decode(data))
+    let response = msgpack.decode(data)
+    console.log('Got response from AirSim: ' + response)
+
+    
+    // This should be a photo
+    if (response.length == 4 && response[3]) {
+
+        const imageData = response[3][0].image_data_uint8
+
+        const arrayBuffer = new Uint8Array(imageData)
+
+        fs.writeFile('test.jpg', arrayBuffer, function(err) {
+            
+        })
+
+        
+    }
+    
 
     // Send the next command if there are more
     processNextCommand()
