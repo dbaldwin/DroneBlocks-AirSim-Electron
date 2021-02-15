@@ -18,10 +18,7 @@ class GPSHandler {
             
         })
 
-        // So we can reference this class in callbacks
-        const self = this
-
-        this.client.on("data", function(data) {
+        this.client.on("data", (data) => {
             const state = notepack.decode(data)
             
             //console.log(state)
@@ -30,19 +27,19 @@ class GPSHandler {
             const kinematics = state[3].kinematics_estimated
             const gps = state[3].gps_location
             
-            self.worldPosition.x_val = parseFloat(kinematics.position["x_val"]).toFixed(2)
-            self.worldPosition.y_val= parseFloat(kinematics.position["y_val"]).toFixed(2)
-            self.worldPosition.z_val = parseFloat(kinematics.position["z_val"]).toFixed(2)
+            this.worldPosition.x_val = parseFloat(kinematics.position["x_val"]).toFixed(2)
+            this.worldPosition.y_val= parseFloat(kinematics.position["y_val"]).toFixed(2)
+            this.worldPosition.z_val = parseFloat(kinematics.position["z_val"]).toFixed(2)
 
-            self.gpsPosition.lat = parseFloat(gps["latitude"]).toFixed(5)
-            self.gpsPosition.lon = parseFloat(gps["longitude"]).toFixed(5)
-            self.gpsPosition.alt = parseFloat(gps["altitude"]).toFixed(2)
+            this.gpsPosition.lat = parseFloat(gps["latitude"]).toFixed(5)
+            this.gpsPosition.lon = parseFloat(gps["longitude"]).toFixed(5)
+            this.gpsPosition.alt = parseFloat(gps["altitude"]).toFixed(2)
            
         })
 
         // Stop on error
-        this.client.on("error", function(error) {
-            self.stop()
+        this.client.on("error", (error) => {
+            this.stop()
         })
 
         // Loop to get drone state every 3 seconds
