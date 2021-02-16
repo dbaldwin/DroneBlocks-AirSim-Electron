@@ -11,6 +11,7 @@ class GPSHandler {
         this.mainWindow = mainWindow
         this.worldPosition = { x_val: 0, y_val: 0, z_val: 0}
         this.gpsPosition = { lat: 0, lon: 0, alt: 0}
+        this.isDroneFlying
 
         // Establish the TCP connection
         // TODO: make this happen on button click
@@ -21,7 +22,7 @@ class GPSHandler {
         this.client.on("data", (data) => {
             const state = notepack.decode(data)
             
-            //console.log(state)
+            this.isDroneFlying = state[3].landed_state
             //console.log(state[3].collision)
             
             const kinematics = state[3].kinematics_estimated
@@ -58,7 +59,6 @@ class GPSHandler {
         // Need to clear the interval here
         clearInterval(this.interval)
     }
-
 }
 
 module.exports.GPSHandler = GPSHandler

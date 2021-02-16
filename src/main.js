@@ -11,7 +11,9 @@ const ipcMain = require('electron').ipcMain
 // Where we'll store photos
 const photoFolder = path.join(app.getPath('pictures'), 'DroneBlocks')
 
-let mainWindow;
+let mainWindow
+
+let gpsHandler
 
 function createWindow () {
   // Create the browser window.
@@ -28,9 +30,10 @@ function createWindow () {
 
   // Open the DevTools.
   //mainWindow.webContents.openDevTools()
-
-  // Get positin position
-  new GPSHandler(mainWindow).start()
+  
+  // Get GPS position
+  gpsHandler = new GPSHandler(mainWindow)
+  gpsHandler.start()
 
   // Check if the DroneBlocks photo folder exists, it not create it
   if (!fs.existsSync(photoFolder)) {
@@ -67,7 +70,7 @@ ipcMain.on('launch', (event, arg) => {
 
   console.log(arg)
 
-  let mb = new MissionBuilder(arg)
+  let mb = new MissionBuilder(arg, gpsHandler.isDroneFlying)
   let commandArray = mb.parseMission()
 
   let t = new TCPCommandHandler('127.0.0.1', 41451, commandArray, photoFolder)

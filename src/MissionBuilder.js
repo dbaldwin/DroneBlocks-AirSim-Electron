@@ -13,9 +13,10 @@ const { RotateByYawRate } = require('./commands/RotateByYawRate')
 
 class MissionBuilder {
 
-    constructor(missionString) {
+    constructor(missionString, isDroneFlying) {
         this.missionString = missionString
         this.missionArray = []
+        this.isDroneFlying = isDroneFlying
     }
 
     parseMission() {
@@ -31,8 +32,9 @@ class MissionBuilder {
         // Create the array to store commands
         let commandList = []
 
-        // Enable API control
-        commandList.push(new EnableApiControl(true).getCommand())
+        // Enable API control if drone is on the ground
+        if (!this.isDroneFlying)
+            commandList.push(new EnableApiControl(true).getCommand())
 
         // Loop through the mission array and build the list of commands
         for (let i = 0; i < this.missionArray.length; i++) {
