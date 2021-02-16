@@ -53,7 +53,7 @@ class TCPCommandHandler {
             } else {
 
                 const response = notepack.decode(data)
-                console.log('Got response from AirSim: ' + response)
+                console.log('Response for command #' + this.commandIndex + ': ' + response)
                 
                 this.processNextCommand()
             }
@@ -75,7 +75,7 @@ class TCPCommandHandler {
     // Send command to AirSim
     sendCommand(command) {
 
-        console.log('Sending command: ' + command)
+        console.log('Sending command #' + this.commandIndex + ': ' + command)
 
         // Pack and send the command
         this.client.write(notepack.encode(command))
@@ -114,9 +114,7 @@ class TCPCommandHandler {
 
                 // Reset the delay and send the next command
                 this.commandDelay = 1000
-                this.commandIndex = this.commandIndex + 1
-                this.sendCommand(this.commandArray[this.commandIndex])
-
+                this.processNextCommand()
             
             } else {
 
