@@ -15,6 +15,7 @@ const { WeatherEnable } = require('./commands/WeatherEnable')
 const { WeatherSet } = require('./commands/WeatherSet')
 const { MoveByVelocity } = require('./commands/MoveByVelocity')
 const { GetImages } = require('./commands/GetImages')
+const { CameraPose } = require('./commands/CameraPose')
 
 let enableApiControl = new EnableApiControl().getCommand()
 let takeoff = new TakeOff().getCommand()
@@ -25,6 +26,7 @@ let disarm = new ArmDisarm(false).getCommand()
 let enableWeather = new WeatherEnable(true).getCommand()
 let weatherSet = new WeatherSet(2, 0.5).getCommand() // 50% snow
 let getImage = new GetImages().getCommand()
+let cameraPose = new CameraPose().getCommand()
 
 // Create the TCP client
 let client = new net.Socket()
@@ -35,7 +37,7 @@ let commandIndex = 0
 // Stores array of commands to be executed
 //let commandArray = [enableApiControl, enableWeather, weatherSet, takeoff, flyBy, flyTo, land, disarm]
 
-let commandArray = [enableApiControl, takeoff, getImage]
+let commandArray = [cameraPose]
 
 // Delay between commands
 const commandDelay = 1000
