@@ -50,7 +50,7 @@ class GPSHandler {
 
     start() {
         this.client.write(notepack.encode(this.command))
-        this.mainWindow.webContents.send("updatePosition", {worldPosition: this.worldPosition, gpsPosition: this.gpsPosition})
+        this.mainWindow.webContents.send("updatePosition", {worldPosition: this.worldPosition, gpsPosition: this.gpsPosition, isDroneFlying: this.isDroneFlying})
     }
 
     stop() {
