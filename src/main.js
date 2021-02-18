@@ -29,7 +29,7 @@ function createWindow () {
   mainWindow.loadURL('https://airsim-dev.web.app/airsim.html?1');
 
   // Open the DevTools.
-  //mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
   
   // Get GPS position
   gpsHandler = new GPSHandler(mainWindow)
@@ -73,7 +73,7 @@ ipcMain.on('launch', (event, arg) => {
   let mb = new MissionBuilder(arg, gpsHandler.isDroneFlying)
   let commandArray = mb.parseMission()
 
-  let t = new TCPCommandHandler('127.0.0.1', 41451, commandArray, photoFolder)
+  let t = new TCPCommandHandler('127.0.0.1', 41451, commandArray, photoFolder, mainWindow)
   t.startMissionLoop()
 
 })

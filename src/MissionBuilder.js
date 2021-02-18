@@ -34,48 +34,51 @@ class MissionBuilder {
         let commandList = []
 
         // Enable API control if drone is on the ground
-        if (!this.isDroneFlying)
-            commandList.push(new EnableApiControl(true).getCommand())
+        //if (!this.isDroneFlying)
+        commandList.push(new EnableApiControl(true))
 
         // Loop through the mission array and build the list of commands
         for (let i = 0; i < this.missionArray.length; i++) {
             
             const command = this.missionArray[i]
+
+            // Block ID is decoded because some blocks have | in them which causes problems for tokenizing
+            const blockId = decodeURIComponent(command.split(",")[1])
             
             if (command.indexOf("disarm") > -1) {
 
-                commandList.push(new ArmDisarm(false).getCommand())
+                commandList.push(new ArmDisarm(blockId, false))
 
             } else if (command.indexOf("arm") > -1) {
 
-                commandList.push(new ArmDisarm(true).getCommand())
+                commandList.push(new ArmDisarm(blockId, true))
 
             } else if (command.indexOf("takeoff") > -1) {
 
-                commandList.push(new TakeOff().getCommand())
+                commandList.push(new TakeOff(blockId))
 
             } else if (command.indexOf("hover") > -1) {
 
-                let delay = command.split(",")[1]
-                commandList.push(new Hover(delay).getCommand())
+                let delay = command.split(",")[2]
+                commandList.push(new Hover(blockId, delay))
 
             } else if (command.indexOf("fly_x") > -1) {
 
-                let vx = command.split(",")[1]
-                let duration = command.split(",")[2]
-                commandList.push(new MoveByVelocity(vx, 0, 0, duration).getCommand())
+                let vx = command.split(",")[2]
+                let duration = command.split(",")[3]
+                commandList.push(new MoveByVelocity(blockId, vx, 0, 0, duration))
 
             } else if (command.indexOf("fly_y") > -1) {
 
-                let vy = command.split(",")[1]
-                let duration = command.split(",")[2]
-                commandList.push(new MoveByVelocity(0, vy, 0, duration).getCommand())
+                let vy = command.split(",")[2]
+                let duration = command.split(",")[3]
+                commandList.push(new MoveByVelocity(blockId, 0, vy, 0, duration))
 
             } else if (command.indexOf("fly_z") > -1) {
 
-                let vz = command.split(",")[1]
-                let duration = command.split(",")[2]
-                commandList.push(new MoveByVelocity(0, 0, vz, duration).getCommand())
+                let vz = command.split(",")[2]
+                let duration = command.split(",")[3]
+                commandList.push(new MoveByVelocity(blockId, 0, 0, vz, duration))
 
             } else if (command.indexOf("fly_to_location") > -1) {
 
@@ -128,7 +131,7 @@ class MissionBuilder {
                 commandList.push(new WeatherSet(weather_type, weather_intensity).getCommand())
 
             } else if (command.indexOf("land") > -1) {
-                commandList.push(new Land().getCommand())
+                commandList.push(new Land(blockId))
             }
 
         }

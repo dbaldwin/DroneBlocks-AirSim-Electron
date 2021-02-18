@@ -7,5 +7,9 @@ class EnableApiControl {
     getCommand() {
         return this.command
     }
+
+    getId() {
+        return ""
+    }
 }
 module.exports.EnableApiControl = EnableApiControl

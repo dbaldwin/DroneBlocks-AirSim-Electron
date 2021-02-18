@@ -5,11 +5,12 @@ const path = require('path')
 
 class TCPCommandHandler {
 
-    constructor(host, port, commandArray, photoFolder) {
+    constructor(host, port, commandArray, photoFolder, mainWindow) {
         this.host = host
         this.port = port
         this.commandArray = commandArray
         this.photoFolder = photoFolder
+        this.mainWindow = mainWindow
         this.client = new net.Socket()
         this.commandIndex = 0
         this.commandDelay = 1000
@@ -75,10 +76,16 @@ class TCPCommandHandler {
     // Send command to AirSim
     sendCommand(command) {
 
-        console.log('Sending command #' + this.commandIndex + ': ' + command)
+        const commandString = command.getCommand()
+
+        console.log('Sending command #' + this.commandIndex + ': ' + commandString)
+
+        // Let's highlight the block on the canvas
+        this.mainWindow.webContents.send("highlightBlock", {id: command.getId()})
+        console.log(command.getId())
 
         // Pack and send the command
-        this.client.write(notepack.encode(command))
+        this.client.write(notepack.encode(commandString))
     }
 
     // Send the next command in the array
@@ -97,20 +104,31 @@ class TCPCommandHandler {
             this.client.destroy()
             console.log("Mission complete!")
             this.commandIndex = 0
+
+            // Unhighlight blocks
+            this.mainWindow.webContents.send("highlightBlock", {id: null})
+
             return
         }
 
         // Let's handle cases where we don't actually want AirSim to do anything
         // So we'll delay before the hover message
-        if (command.indexOf("hover") > -1) {
-            const delay = command[1] * 1000
+        if (command.getCommand().indexOf("hover") > -1) {
+            console.log(command)
+
+            // Delay is index 2 because block id is 1
+            const delay = command.getCommand()[1] * 1000
+            console.log(delay)
             this.commandDelay = delay
+
+            // Let's highlight the hover block still
+            this.mainWindow.webContents.send("highlightBlock", {id: command.getId()})
         }
 
         // We'll delay between commands and when there's a hover block we'll change the delay
         setTimeout(() => {
 
-            if (command.indexOf("hover") > -1) {
+            if (command.getCommand().indexOf("hover") > -1) {
 
                 // Reset the delay and send the next command
                 this.commandDelay = 1000
