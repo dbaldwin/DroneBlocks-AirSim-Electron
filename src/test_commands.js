@@ -26,7 +26,7 @@ let disarm = new ArmDisarm(false).getCommand()
 let enableWeather = new WeatherEnable(true).getCommand()
 let weatherSet = new WeatherSet(2, 0.5).getCommand() // 50% snow
 let getImage = new GetImages().getCommand()
-let cameraPose = new CameraPose().getCommand()
+let cameraPose = new CameraPose(45).getCommand()
 
 // Create the TCP client
 let client = new net.Socket()

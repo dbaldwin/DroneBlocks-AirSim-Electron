@@ -10,6 +10,7 @@ const { GetImages } = require('./commands/GetImages')
 const { WeatherEnable } = require('./commands/WeatherEnable')
 const { WeatherSet } = require('./commands/WeatherSet')
 const { RotateByYawRate } = require('./commands/RotateByYawRate')
+const { CameraPose } = require('./commands/CameraPose')
 
 class MissionBuilder {
 
@@ -109,6 +110,11 @@ class MissionBuilder {
             } else if (command.indexOf("photo") > -1) {
 
                 commandList.push(new GetImages().getCommand())
+
+            } else if (command.indexOf("pitch_gimbal") > -1) {
+
+                let pitch = parseFloat(command.split(",")[1])
+                commandList.push(new CameraPose(pitch).getCommand())
             
             } else if (command.indexOf("weather_enable") > -1) {
 
