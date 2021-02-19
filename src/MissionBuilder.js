@@ -89,10 +89,19 @@ class MissionBuilder {
                 // Todo we need to expose velocity in the blocks
                 commandList.push(new MoveToPosition(northx, easty, downz, 5).getCommand())
 
+            } else if (command.indexOf("fly_rpy") > -1) {
+
+                let roll = command.split(",")[1]
+                let pitch = command.split(",")[2]
+                let yaw = command.split(",")[3]
+
+                // NEED TO IMPLEMENT
+                // commandList.push()
+
             } else if (command.indexOf("rotate_to_yaw") > -1) {
 
-                let yaw = command.split(",")[1]
-                commandList.push(new RotateToYaw(yaw).getCommand())
+                let yaw = command.split(",")[2]
+                commandList.push(new RotateToYaw(blockId, yaw))
 
             } else if (command.indexOf("rotate_yaw_rate") > -1) {
 
