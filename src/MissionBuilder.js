@@ -82,12 +82,12 @@ class MissionBuilder {
 
             } else if (command.indexOf("fly_to_location") > -1) {
 
-                let northx = command.split(",")[1]
-                let easty = command.split(",")[2]
-                let downz = command.split(",")[3]
+                let northx = command.split(",")[2]
+                let easty = command.split(",")[3]
+                let downz = command.split(",")[4]
 
                 // Todo we need to expose velocity in the blocks
-                commandList.push(new MoveToPosition(northx, easty, downz, 5).getCommand())
+                commandList.push(new MoveToPosition(blockId, northx, easty, downz, 5))
 
             } else if (command.indexOf("fly_rpy") > -1) {
 
@@ -111,36 +111,44 @@ class MissionBuilder {
 
             } else if (command.indexOf("photo_interval") > -1) {
 
-                let photos = parseInt(command.split(",")[1])
-                let interval = command.split(",")[2]
+                let photos = parseInt(command.split(",")[2])
+                let interval = command.split(",")[3]
 
                 for (let i = 0; i < photos; i++) {
-                    commandList.push(new GetImages().getCommand())
-                    commandList.push(new Hover(interval).getCommand())
+                    commandList.push(new GetImages(blockId))
+                    commandList.push(new Hover(blockId, interval))
                 }
             
             } else if (command.indexOf("photo") > -1) {
 
-                commandList.push(new GetImages().getCommand())
+                commandList.push(new GetImages(blockId))
 
             } else if (command.indexOf("pitch_gimbal") > -1) {
 
-                let pitch = parseFloat(command.split(",")[1])
-                commandList.push(new CameraPose(pitch).getCommand())
+                let pitch = parseFloat(command.split(",")[2])
+                commandList.push(new CameraPose(blockId, pitch))
             
             } else if (command.indexOf("weather_enable") > -1) {
 
-                let enable = command.split(",")[1] == "true"
-                commandList.push(new WeatherEnable(enable).getCommand())
+                let enable = command.split(",")[2] == "true"
+                commandList.push(new WeatherEnable(blockId, enable))
 
             } else if (command.indexOf("weather_set") > -1) {
 
-                let weather_type = command.split(",")[1]
-                let weather_intensity = command.split(",")[2]
-                commandList.push(new WeatherSet(weather_type, weather_intensity).getCommand())
+                let weather_type = command.split(",")[2]
+                let weather_intensity = command.split(",")[3]
+                commandList.push(new WeatherSet(blockId, weather_type, weather_intensity))
 
             } else if (command.indexOf("land") > -1) {
+
                 commandList.push(new Land(blockId))
+            
+            } else if (command.indexOf("return_home") > -1) {
+
+                commandList.push(new MoveToPosition(blockId, 0, 0, 0, 5))
+                commandList.push(new Hover(blockId, 5))
+                commandList.push(new Land(blockId))
+            
             }
 
         }

@@ -1,8 +1,10 @@
 const { Quaternion } = require('../utils/Quaternion')
 
 class CameraPose {
-    constructor(pitch) {
+    constructor(id, pitch) {
         
+        this.id = id
+
         let pitchRadians = pitch * (Math.PI/180)
         let q = new Quaternion(pitchRadians, 0, 0).getQuaternion()
         this.command = [0, 0, "simSetCameraPose", ["0", {"position": {"x_val": 0, "y_val": 0, "z_val": 0}, "orientation": {"x_val": 0, "y_val": q.y_val, "z_val": 0, "w_val": q.w_val}}, ""]]
@@ -11,6 +13,10 @@ class CameraPose {
 
     getCommand() {
         return this.command
+    }
+
+    getId() {
+        return this.id
     }
 }
 module.exports.CameraPose = CameraPose

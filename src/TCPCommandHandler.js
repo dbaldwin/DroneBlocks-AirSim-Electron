@@ -21,7 +21,7 @@ class TCPCommandHandler {
         this.client.on('data', (data) => {
 
             // We care about this response because it contains image data and we want to save it
-            if (this.currentCommand != null && this.currentCommand.toString().indexOf('simGetImages') > -1) {
+            if (this.currentCommand != null && this.currentCommand.getCommand().toString().indexOf('simGetImages') > -1) {
                 
                 // Store the image data in a buffer
                 // Since it's chunked we will concat it
