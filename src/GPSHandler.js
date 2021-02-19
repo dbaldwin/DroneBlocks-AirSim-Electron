@@ -1,6 +1,7 @@
 const net = require('net')
 const notepack = require('notepack.io')
 const ipcMain = require('electron').ipcMain
+const { Euler } = require('./utils/Euler')
 
 class GPSHandler {
 
@@ -12,6 +13,7 @@ class GPSHandler {
         this.worldPosition = { x_val: 0, y_val: 0, z_val: 0}
         this.gpsPosition = { lat: 0, lon: 0, alt: 0}
         this.isDroneFlying
+        this.yaw = 0
 
         // Establish the TCP connection
         // TODO: make this happen on button click
@@ -24,7 +26,8 @@ class GPSHandler {
             
             this.isDroneFlying = state[3].landed_state
             //console.log(state[3].collision)
-            
+            //console.log(state[3])
+                        
             const kinematics = state[3].kinematics_estimated
             const gps = state[3].gps_location
             
@@ -35,7 +38,9 @@ class GPSHandler {
             this.gpsPosition.lat = parseFloat(gps["latitude"]).toFixed(5)
             this.gpsPosition.lon = parseFloat(gps["longitude"]).toFixed(5)
             this.gpsPosition.alt = parseFloat(gps["altitude"]).toFixed(2)
-           
+
+            this.yaw = new Euler(state[3].kinematics_estimated.orientation).getYawAngle().toFixed(2)
+        
         })
 
         // Stop on error
@@ -50,7 +55,7 @@ class GPSHandler {
 
     start() {
         this.client.write(notepack.encode(this.command))
-        this.mainWindow.webContents.send("updatePosition", {worldPosition: this.worldPosition, gpsPosition: this.gpsPosition, isDroneFlying: this.isDroneFlying})
+        this.mainWindow.webContents.send("updatePosition", {worldPosition: this.worldPosition, gpsPosition: this.gpsPosition, isDroneFlying: this.isDroneFlying, yaw: this.yaw})
     }
 
     stop() {
