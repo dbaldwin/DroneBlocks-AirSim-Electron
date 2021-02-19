@@ -105,9 +105,9 @@ class MissionBuilder {
 
             } else if (command.indexOf("rotate_yaw_rate") > -1) {
 
-                let rate = command.split(",")[1]
-                let duration = command.split(",")[2]
-                commandList.push(new RotateByYawRate(rate, duration).getCommand())
+                let rate = command.split(",")[2]
+                let duration = command.split(",")[3]
+                commandList.push(new RotateByYawRate(blockId, rate, duration))
 
             } else if (command.indexOf("photo_interval") > -1) {
 
