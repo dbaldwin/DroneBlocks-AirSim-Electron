@@ -29,7 +29,7 @@ function createWindow () {
   mainWindow.loadURL('https://airsim-dev.web.app/airsim.html?1');
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  //mainWindow.webContents.openDevTools()
   
   // Get GPS position
   gpsHandler = new GPSHandler(mainWindow)
