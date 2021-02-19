@@ -1,7 +1,7 @@
 class MoveByRollPitchYaw {
 
-    constructor(roll, pitch, yaw) {
-        this.command = [0, 0, "moveByRollPitchYawZ", []]
+    constructor(roll, pitch, yaw, duration) {
+        this.command = [0, 0, "moveByRollPitchYawZ", [5, 5, 5, 0, 10]]
     }
 
     getCommand() {
