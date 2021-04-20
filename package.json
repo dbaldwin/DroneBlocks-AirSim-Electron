@@ -1,5 +1,5 @@
 {
-  "name": "droneblocks-airsim-electron",
+  "name": "DroneBlocks-AirSim",
   "version": "1.0.0",
   "description": "DroneBlocks with AirSim",
   "main": "src/main.js",
