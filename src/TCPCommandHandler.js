@@ -82,7 +82,7 @@ class TCPCommandHandler {
 
         // Let's highlight the block on the canvas
         this.mainWindow.webContents.send("highlightBlock", {id: command.getId()})
-        console.log(command.getId())
+        console.log("Trying to highlight: " + command.getId())
 
         // Pack and send the command
         this.client.write(notepack.encode(commandString))

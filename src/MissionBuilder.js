@@ -121,7 +121,8 @@ class MissionBuilder {
             
             } else if (command.indexOf("photo") > -1) {
 
-                commandList.push(new GetImages(blockId))
+                let photo_type = parseInt(command.split(",")[2])
+                commandList.push(new GetImages(blockId, photo_type))
 
             } else if (command.indexOf("pitch_gimbal") > -1) {
 

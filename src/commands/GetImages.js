@@ -1,8 +1,8 @@
 class GetImages {
     
-    constructor(id) {
+    constructor(id, photo_type) {
         this.id = id
-        this.command = [0, 0, "simGetImages", [[{"camera_name": "0", "image_type": 0, "pixels_as_float": false, "compress": true}], ""]]
+        this.command = [0, 0, "simGetImages", [[{"camera_name": "0", "image_type": photo_type, "pixels_as_float": false, "compress": true}], ""]]
     }
 
     getCommand() {
