@@ -37,7 +37,7 @@ class TCPCommandHandler {
                     const arrayBuffer = new Uint8Array(imageData)
 
                     // Save the buffer to an image
-                    fs.writeFile(path.join(this.photoFolder, Date.now() + '.jpg'), arrayBuffer, (err) => {
+                    fs.writeFile(path.join(this.photoFolder, Date.now() + '.png'), arrayBuffer, (err) => {
                         if(err) {
                             console.log('error saving photo')
                         }
